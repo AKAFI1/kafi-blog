@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 272" width="680" height="272" role="img" aria-labelledby="t d">
+<title id="t">Anatomy of a safepoint pause</title>
+<desc id="d">Three application threads run until a VM operation is requested. They reach their poll points at different times. The gap between the request and the last thread parking is the time to safepoint.</desc>
+<style>
+  text { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; fill: #6f6a60; }
+  .band-run { fill: #eae5d9; }
+  .band-ttsp { fill: #f0d9c9; }
+  .band-op { fill: #dde5dd; }
+  .lane { stroke: #453f38; stroke-width: 1.5; }
+  .lane-park { stroke: #a9a29a; stroke-width: 0.75; stroke-dasharray: 2 4; }
+  .lane-strag { stroke: #9e3618; stroke-width: 1.5; }
+  .mark { stroke: #6f6a60; stroke-width: 0.75; stroke-dasharray: 3 3; }
+  .dot { fill: #453f38; }
+  .dot-strag { fill: #9e3618; }
+  @media (prefers-color-scheme: dark) {
+    text { fill: #918b7e; }
+    .band-run { fill: #232319; }
+    .band-ttsp { fill: #35251d; }
+    .band-op { fill: #1f2a22; }
+    .lane { stroke: #cbc5b8; }
+    .lane-park { stroke: #5d574c; }
+    .lane-strag { stroke: #e0794f; }
+    .mark { stroke: #918b7e; }
+    .dot { fill: #cbc5b8; }
+    .dot-strag { fill: #e0794f; }
+  }
+</style>
+<rect class="band-run" x="100" y="62" width="160" height="140" rx="3"/>
+<rect class="band-ttsp" x="260" y="62" width="210" height="140" rx="3"/>
+<rect class="band-op" x="470" y="62" width="110" height="140" rx="3"/>
+<text x="260" y="48" text-anchor="middle">VM op requested</text>
+<text x="470" y="48" text-anchor="middle">last thread parked</text>
+<line class="mark" x1="260" y1="56" x2="260" y2="208"/>
+<line class="mark" x1="470" y1="56" x2="470" y2="208"/>
+<text x="40" y="101">thread 1</text>
+<line class="lane" x1="100" y1="97" x2="300" y2="97"/>
+<line class="lane-park" x1="300" y1="97" x2="580" y2="97"/>
+<circle class="dot" cx="300" cy="97" r="3.5"/>
+<text x="40" y="141">thread 2</text>
+<line class="lane" x1="100" y1="137" x2="352" y2="137"/>
+<line class="lane-park" x1="352" y1="137" x2="580" y2="137"/>
+<circle class="dot" cx="352" cy="137" r="3.5"/>
+<text x="40" y="181">thread 3</text>
+<line class="lane-strag" x1="100" y1="177" x2="470" y2="177"/>
+<line class="lane-park" x1="470" y1="177" x2="580" y2="177"/>
+<circle class="dot-strag" cx="470" cy="177" r="4"/>
+<text x="180" y="226" text-anchor="middle">running</text>
+<text x="180" y="244" text-anchor="middle">time since last</text>
+<text x="365" y="226" text-anchor="middle">walking to a poll point</text>
+<text x="365" y="244" text-anchor="middle">reaching safepoint</text>
+<text x="525" y="226" text-anchor="middle">VM op runs</text>
+<text x="525" y="244" text-anchor="middle">at safepoint</text>
+</svg>

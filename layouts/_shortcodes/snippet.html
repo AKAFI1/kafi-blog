@@ -1,0 +1,63 @@
+{{- $file := .Get "file" -}}
+{{- $region := .Get "region" -}}
+{{- $lang := .Get "lang" | default "java" -}}
+{{- $opts := .Get "options" | default "" -}}
+
+{{- if not $file -}}
+  {{- errorf "snippet: missing 'file' parameter in %s" .Position -}}
+{{- end -}}
+
+{{- $raw := "" -}}
+{{- if fileExists $file -}}
+  {{- $raw = os.ReadFile $file -}}
+{{- else -}}
+  {{- errorf "snippet: file not found: %s (called from %s)" $file .Position -}}
+{{- end -}}
+
+{{- $code := trim $raw "\n" -}}
+
+{{- if $region -}}
+  {{- $startMark := printf "region:%s" $region -}}
+  {{- $endMark := printf "endregion:%s" $region -}}
+  {{- $inside := false -}}
+  {{- $picked := slice -}}
+  {{/* the branches must be mutually exclusive: "endregion:x" contains "region:x" */}}
+  {{- range (split $raw "\n") -}}
+    {{- if strings.Contains . $endMark -}}
+      {{- $inside = false -}}
+    {{- else if strings.Contains . $startMark -}}
+      {{- $inside = true -}}
+    {{- else if $inside -}}
+      {{- $picked = $picked | append . -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if eq (len $picked) 0 -}}
+    {{- errorf "snippet: region %q not found in %s (called from %s)" $region $file .Position -}}
+  {{- end -}}
+
+  {{/* dedent by the indentation of the first non-blank line */}}
+  {{- $anchor := "" -}}
+  {{- range $picked -}}
+    {{- if and (eq $anchor "") (ne (trim . " \t") "") -}}
+      {{- $anchor = . -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $indent := sub (len $anchor) (len (strings.TrimLeft " \t" $anchor)) -}}
+
+  {{- $dedented := slice -}}
+  {{- range $picked -}}
+    {{- if ge (len .) $indent -}}
+      {{- $dedented = $dedented | append (substr . $indent) -}}
+    {{- else -}}
+      {{- $dedented = $dedented | append "" -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $code = trim (delimit $dedented "\n") "\n" -}}
+{{- end -}}
+
+<figure class="snippet">
+  {{ highlight $code $lang $opts }}
+  <figcaption><a href="{{ printf "%s/blob/main/%s" (.Site.Params.github | default "#") $file }}">{{ $file }}{{ with $region }} &middot; {{ . }}{{ end }}</a></figcaption>
+</figure>

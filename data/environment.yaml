@@ -1,0 +1,8 @@
+# Single source of truth for the disclosure stanza. Update once, every article follows.
+cpu: "CHANGEME (e.g. AMD Ryzen 7 7840U)"
+cores: "CHANGEME (e.g. 8 physical, 16 logical, SMT enabled)"
+turbo: "CHANGEME (e.g. boost disabled, governor=performance)"
+pinning: "CHANGEME (e.g. taskset -c 2,3, isolated via isolcpus)"
+os: "CHANGEME (e.g. Ubuntu 24.04, kernel 6.8.0)"
+jdk: "CHANGEME (paste the full output of java -version)"
+flags: "CHANGEME (the exact JVM flags used for the run)"

@@ -1,0 +1,16 @@
+{{ define "main" }}
+<article class="prose">
+  <header class="prose__header">
+    <h1>{{ .Title }}</h1>
+    {{ if eq .Section "posts" }}
+    <p class="prose__meta">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2 January 2006" }}</time>
+      &middot; {{ .ReadingTime }} min
+      {{ with .Params.jdk }}&middot; JDK {{ . }}{{ end }}
+    </p>
+    {{ end }}
+    {{ with .Description }}<p class="prose__standfirst">{{ . }}</p>{{ end }}
+  </header>
+  {{ .Content }}
+</article>
+{{ end }}

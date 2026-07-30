@@ -1,0 +1,7 @@
+{{- $src := .Get "src" -}}
+{{- $alt := .Get "alt" | default "" -}}
+{{- $wide := .Get "wide" | default "true" -}}
+<figure class="fig{{ if eq $wide "true" }} fig--wide{{ end }}">
+  <img src="{{ $src | relURL }}" alt="{{ $alt }}" loading="lazy">
+  {{- with .Inner -}}<figcaption>{{ . | markdownify }}</figcaption>{{- end -}}
+</figure>

@@ -1,0 +1,19 @@
+{{ define "main" }}
+<section class="index">
+  <h1 class="index__title">{{ .Title }}</h1>
+  {{ with .Content }}<div class="intro__body">{{ . }}</div>{{ end }}
+  {{ if .Pages }}
+  <ol class="postlist">
+    {{ range .Pages.ByDate.Reverse }}
+    <li class="postlist__item">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      {{ with .Description }}<p class="postlist__blurb">{{ . }}</p>{{ end }}
+    </li>
+    {{ end }}
+  </ol>
+  {{ else }}
+  <p class="empty">Nothing published yet.</p>
+  {{ end }}
+</section>
+{{ end }}

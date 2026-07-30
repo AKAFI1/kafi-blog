@@ -1,0 +1,9 @@
+<header class="masthead">
+  <a class="masthead__name" href="{{ "/" | relURL }}">{{ .Site.Title }}</a>
+  <nav class="masthead__nav">
+    <a href="{{ "/posts/" | relURL }}">writing</a>
+    <a href="{{ "/about/" | relURL }}">about</a>
+    <a href="{{ .Site.Params.github }}">github</a>
+    <a href="{{ .Site.Params.linkedin }}">linkedin</a>
+  </nav>
+</header>

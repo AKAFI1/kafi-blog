@@ -1,0 +1,33 @@
+baseURL = "https://example.dev/"
+locale = "en-gb"
+title = "Ahmed Kafi"
+enableRobotsTXT = true
+enableGitInfo = false
+
+# code/ and bench/ live inside the Hugo root so os.ReadFile can reach them
+# from the snippet shortcode. They are not content, so Hugo ignores them.
+
+[params]
+  tagline = "Low-latency Java, the JVM, and trading systems infrastructure."
+  linkedin = "https://linkedin.com/in/ahmed-kafi-9b0877242"
+  github = "https://github.com/CHANGEME"
+  email = "CHANGEME@example.dev"
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[markup.highlight]
+  noClasses = false
+  lineNos = false
+  tabWidth = 4
+  guessSyntax = false
+
+[markup.tableOfContents]
+  startLevel = 2
+  endLevel = 3
+
+[taxonomies]
+  tag = "tags"
+
+[outputs]
+  home = ["html", "rss"]

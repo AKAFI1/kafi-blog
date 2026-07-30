@@ -1,0 +1,25 @@
+{{ define "main" }}
+<section class="intro">
+  <h1>{{ .Site.Title }}</h1>
+  <p class="intro__tagline">{{ .Site.Params.tagline }}</p>
+  {{ with .Content }}<div class="intro__body">{{ . }}</div>{{ end }}
+</section>
+
+<section class="index">
+  <h2 class="index__title">Writing</h2>
+  {{ $posts := where site.RegularPages "Section" "posts" }}
+  {{ if $posts }}
+  <ol class="postlist">
+    {{ range $posts }}
+    <li class="postlist__item">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      {{ with .Description }}<p class="postlist__blurb">{{ . }}</p>{{ end }}
+    </li>
+    {{ end }}
+  </ol>
+  {{ else }}
+  <p class="empty">Nothing published yet.</p>
+  {{ end }}
+</section>
+{{ end }}

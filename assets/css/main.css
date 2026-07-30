@@ -1,0 +1,496 @@
+:root {
+  --paper: #fbfaf6;
+  --paper-sunk: #f2efe7;
+  --ink: #1b1917;
+  --ink-soft: #453f38;
+  --muted: #6f6a60;
+  --rule: #e2ddd1;
+  --accent: #9e3618;
+  --serif: "Newsreader", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  --measure: 62ch;
+  --gutter: 6.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14140f;
+    --paper-sunk: #1d1d17;
+    --ink: #ece7dc;
+    --ink-soft: #cbc5b8;
+    --muted: #918b7e;
+    --rule: #2e2e26;
+    --accent: #e0794f;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.62;
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
+a:hover { border-bottom-color: var(--accent); }
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.5rem;
+  max-width: calc(var(--measure) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 1.25rem;
+  border-bottom: 1px solid var(--rule);
+}
+.masthead__name {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border: 0;
+}
+.masthead__nav { margin-left: auto; display: flex; gap: 1.1rem; }
+.masthead__nav a {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  border: 0;
+}
+.masthead__nav a:hover { color: var(--accent); }
+
+/* ---------- home ---------- */
+
+.intro, .index {
+  max-width: calc(var(--measure) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+.intro { padding-top: 4rem; }
+.intro h1 {
+  font-size: 2.1rem;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+.intro__tagline {
+  max-width: 46ch;
+  margin: 0.6rem 0 0;
+  color: var(--ink-soft);
+  font-size: 1.15rem;
+}
+.intro__body { max-width: var(--measure); margin-top: 1.6rem; color: var(--ink-soft); }
+
+.index { padding-top: 3.5rem; padding-bottom: 4rem; }
+.index__title {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.postlist { list-style: none; margin: 0; padding: 0; }
+.postlist__item {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 0 1.5rem;
+  padding: 1.05rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.postlist__item time {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  padding-top: 0.42rem;
+}
+.postlist__item > a {
+  font-size: 1.18rem;
+  font-weight: 500;
+  color: var(--ink);
+  border: 0;
+  text-wrap: balance;
+}
+.postlist__item > a:hover { color: var(--accent); }
+.postlist__blurb {
+  grid-column: 2;
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+  max-width: 58ch;
+}
+.empty { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); }
+
+@media (max-width: 34rem) {
+  .postlist__item { grid-template-columns: 1fr; }
+  .postlist__item time { padding-top: 0; }
+  .postlist__blurb { grid-column: 1; }
+}
+
+/* ---------- article ---------- */
+
+.prose {
+  display: grid;
+  grid-template-columns:
+    [full-start] minmax(1.25rem, 1fr)
+    [wide-start] minmax(0, var(--gutter))
+    [text-start] minmax(0, var(--measure))
+    [text-end] minmax(0, var(--gutter))
+    [wide-end] minmax(1.25rem, 1fr)
+    [full-end];
+  padding: 4rem 0 5rem;
+  counter-reset: section;
+}
+.prose > * { grid-column: text; }
+.prose > .snippet, .prose > .fig--wide, .prose > .env { grid-column: wide; }
+
+.prose__header { margin-bottom: 2.75rem; }
+.prose__header h1 {
+  font-size: 2.35rem;
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+.prose__meta {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: 0.9rem 0 0;
+}
+.prose__standfirst {
+  font-size: 1.2rem;
+  color: var(--ink-soft);
+  margin: 1.1rem 0 0;
+  max-width: 54ch;
+}
+
+.prose h2 {
+  position: relative;
+  counter-increment: section;
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin: 3.2rem 0 0.9rem;
+}
+.prose h2::before {
+  content: counter(section);
+  position: absolute;
+  left: calc(-1 * var(--gutter) + 1.5rem);
+  top: 0.42rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+.prose h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 2.1rem 0 0.6rem;
+}
+.prose p { margin: 0 0 1.15rem; }
+.prose ul, .prose ol { margin: 0 0 1.3rem; padding-left: 1.4rem; }
+.prose li { margin-bottom: 0.4rem; }
+.prose hr { border: 0; border-top: 1px solid var(--rule); margin: 2.6rem 0; }
+.prose blockquote {
+  margin: 1.6rem 0;
+  padding-left: 1.2rem;
+  border-left: 2px solid var(--rule);
+  border-radius: 0;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+.prose code {
+  font-family: var(--mono);
+  font-size: 0.82em;
+  background: var(--paper-sunk);
+  padding: 0.1em 0.32em;
+  border-radius: 3px;
+}
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 0 0 1.6rem;
+}
+.prose th, .prose td {
+  text-align: left;
+  padding: 0.5rem 0.7rem 0.5rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.prose th {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+@media (max-width: 52rem) {
+  .prose h2::before { position: static; display: block; margin-bottom: 0.3rem; }
+}
+
+/* ---------- snippets, figures, disclosure ---------- */
+
+.snippet, .fig { margin: 1.9rem 0 2.1rem; }
+.snippet .highlight {
+  background: var(--paper-sunk);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow-x: auto;
+}
+.snippet pre {
+  margin: 0;
+  padding: 1rem 1.15rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.62;
+  background: transparent;
+}
+.snippet figcaption, .fig figcaption {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+.snippet figcaption a { color: var(--muted); border-bottom-color: var(--rule); }
+.snippet figcaption a:hover { color: var(--accent); }
+.fig img { display: block; width: 100%; height: auto; }
+
+.env {
+  margin: 2.1rem 0;
+  padding: 1.1rem 1.25rem 0.6rem;
+  background: var(--paper-sunk);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+.env__title {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.7rem;
+}
+.env dl {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  gap: 0.32rem 1rem;
+  margin: 0 0 0.7rem;
+  font-size: 0.82rem;
+}
+.env dt { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); padding-top: 0.14rem; }
+.env dd { margin: 0; }
+.env code { font-size: 0.76rem; background: transparent; padding: 0; }
+
+@media (max-width: 34rem) {
+  .env dl { grid-template-columns: 1fr; gap: 0 0; }
+  .env dd { margin-bottom: 0.5rem; }
+}
+
+/* ---------- footer ---------- */
+
+.footer {
+  max-width: calc(var(--measure) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3.5rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.footer p { margin: 0 0 0.5rem; max-width: 60ch; }
+.footer a { color: var(--muted); border-bottom-color: var(--rule); }
+.footer a:hover { color: var(--accent); }
+
+/* ---------- chroma: generated, do not hand-edit ---------- */
+/* regenerate: hugo gen chromastyles --style=github */
+/* Generated using: hugo gen chromastyles --style=github */
+
+/* Background */ .bg { background-color:#f7f7f7; }
+/* PreWrapper */ .chroma { background-color:#f7f7f7;-webkit-text-size-adjust:none; }
+/* Error */ .chroma .err { color:#f6f8fa;background-color:#82071e }
+/* LineLink */ .chroma .lnlinks { outline:none;text-decoration:none;color:inherit }
+/* LineTableTD */ .chroma .lntd { vertical-align:top;padding:0;margin:0;border:0; }
+/* LineTable */ .chroma .lntable { border-spacing:0;padding:0;margin:0;border:0; }
+/* LineHighlight */ .chroma .hl { background-color:#dedede }
+/* LineNumbersTable */ .chroma .lnt { white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f }
+/* LineNumbers */ .chroma .ln { white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f }
+/* Line */ .chroma .line { display:flex; }
+/* Keyword */ .chroma .k { color:#cf222e }
+/* KeywordConstant */ .chroma .kc { color:#cf222e }
+/* KeywordDeclaration */ .chroma .kd { color:#cf222e }
+/* KeywordNamespace */ .chroma .kn { color:#cf222e }
+/* KeywordPseudo */ .chroma .kp { color:#cf222e }
+/* KeywordReserved */ .chroma .kr { color:#cf222e }
+/* KeywordType */ .chroma .kt { color:#cf222e }
+/* NameAttribute */ .chroma .na { color:#1f2328 }
+/* NameClass */ .chroma .nc { color:#1f2328 }
+/* NameConstant */ .chroma .no { color:#0550ae }
+/* NameDecorator */ .chroma .nd { color:#0550ae }
+/* NameEntity */ .chroma .ni { color:#6639ba }
+/* NameLabel */ .chroma .nl { color:#900;font-weight:bold }
+/* NameNamespace */ .chroma .nn { color:#24292e }
+/* NameOther */ .chroma .nx { color:#1f2328 }
+/* NameTag */ .chroma .nt { color:#0550ae }
+/* NameBuiltin */ .chroma .nb { color:#6639ba }
+/* NameBuiltinPseudo */ .chroma .bp { color:#6a737d }
+/* NameVariable */ .chroma .nv { color:#953800 }
+/* NameVariableClass */ .chroma .vc { color:#953800 }
+/* NameVariableGlobal */ .chroma .vg { color:#953800 }
+/* NameVariableInstance */ .chroma .vi { color:#953800 }
+/* NameVariableMagic */ .chroma .vm { color:#953800 }
+/* NameFunction */ .chroma .nf { color:#6639ba }
+/* NameFunctionMagic */ .chroma .fm { color:#6639ba }
+/* LiteralString */ .chroma .s { color:#0a3069 }
+/* LiteralStringAffix */ .chroma .sa { color:#0a3069 }
+/* LiteralStringBacktick */ .chroma .sb { color:#0a3069 }
+/* LiteralStringChar */ .chroma .sc { color:#0a3069 }
+/* LiteralStringDelimiter */ .chroma .dl { color:#0a3069 }
+/* LiteralStringDoc */ .chroma .sd { color:#0a3069 }
+/* LiteralStringDouble */ .chroma .s2 { color:#0a3069 }
+/* LiteralStringEscape */ .chroma .se { color:#0a3069 }
+/* LiteralStringHeredoc */ .chroma .sh { color:#0a3069 }
+/* LiteralStringInterpol */ .chroma .si { color:#0a3069 }
+/* LiteralStringOther */ .chroma .sx { color:#0a3069 }
+/* LiteralStringRegex */ .chroma .sr { color:#0a3069 }
+/* LiteralStringSingle */ .chroma .s1 { color:#0a3069 }
+/* LiteralStringSymbol */ .chroma .ss { color:#032f62 }
+/* LiteralNumber */ .chroma .m { color:#0550ae }
+/* LiteralNumberBin */ .chroma .mb { color:#0550ae }
+/* LiteralNumberFloat */ .chroma .mf { color:#0550ae }
+/* LiteralNumberHex */ .chroma .mh { color:#0550ae }
+/* LiteralNumberInteger */ .chroma .mi { color:#0550ae }
+/* LiteralNumberIntegerLong */ .chroma .il { color:#0550ae }
+/* LiteralNumberOct */ .chroma .mo { color:#0550ae }
+/* Operator */ .chroma .o { color:#0550ae }
+/* OperatorWord */ .chroma .ow { color:#0550ae }
+/* OperatorReserved */ .chroma .or { color:#0550ae }
+/* Punctuation */ .chroma .p { color:#1f2328 }
+/* Comment */ .chroma .c { color:#57606a }
+/* CommentHashbang */ .chroma .ch { color:#57606a }
+/* CommentMultiline */ .chroma .cm { color:#57606a }
+/* CommentSingle */ .chroma .c1 { color:#57606a }
+/* CommentSpecial */ .chroma .cs { color:#57606a }
+/* CommentPreproc */ .chroma .cp { color:#57606a }
+/* CommentPreprocFile */ .chroma .cpf { color:#57606a }
+/* GenericDeleted */ .chroma .gd { color:#82071e;background-color:#ffebe9 }
+/* GenericEmph */ .chroma .ge { color:#1f2328 }
+/* GenericInserted */ .chroma .gi { color:#116329;background-color:#dafbe1 }
+/* GenericOutput */ .chroma .go { color:#1f2328 }
+/* GenericUnderline */ .chroma .gl { text-decoration:underline }
+/* TextWhitespace */ .chroma .w { color:#fff }
+
+@media (prefers-color-scheme: dark) {
+  /* Generated using: hugo gen chromastyles --style=github-dark */
+  
+  /* Background */ .bg { color:#e6edf3;background-color:#0d1117; }
+  /* PreWrapper */ .chroma { color:#e6edf3;background-color:#0d1117;-webkit-text-size-adjust:none; }
+  /* Error */ .chroma .err { color:#f85149 }
+  /* LineLink */ .chroma .lnlinks { outline:none;text-decoration:none;color:inherit }
+  /* LineTableTD */ .chroma .lntd { vertical-align:top;padding:0;margin:0;border:0; }
+  /* LineTable */ .chroma .lntable { border-spacing:0;padding:0;margin:0;border:0; }
+  /* LineHighlight */ .chroma .hl { background-color:#6e7681 }
+  /* LineNumbersTable */ .chroma .lnt { white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#737679 }
+  /* LineNumbers */ .chroma .ln { white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#6e7681 }
+  /* Line */ .chroma .line { display:flex; }
+  /* Keyword */ .chroma .k { color:#ff7b72 }
+  /* KeywordConstant */ .chroma .kc { color:#79c0ff }
+  /* KeywordDeclaration */ .chroma .kd { color:#ff7b72 }
+  /* KeywordNamespace */ .chroma .kn { color:#ff7b72 }
+  /* KeywordPseudo */ .chroma .kp { color:#79c0ff }
+  /* KeywordReserved */ .chroma .kr { color:#ff7b72 }
+  /* KeywordType */ .chroma .kt { color:#ff7b72 }
+  /* NameClass */ .chroma .nc { color:#f0883e;font-weight:bold }
+  /* NameConstant */ .chroma .no { color:#79c0ff;font-weight:bold }
+  /* NameDecorator */ .chroma .nd { color:#d2a8ff;font-weight:bold }
+  /* NameEntity */ .chroma .ni { color:#ffa657 }
+  /* NameException */ .chroma .ne { color:#f0883e;font-weight:bold }
+  /* NameLabel */ .chroma .nl { color:#79c0ff;font-weight:bold }
+  /* NameNamespace */ .chroma .nn { color:#ff7b72 }
+  /* NameOther */ .chroma .nx { color:#e6edf3 }
+  /* NameProperty */ .chroma .py { color:#79c0ff }
+  /* NameTag */ .chroma .nt { color:#7ee787 }
+  /* NameVariable */ .chroma .nv { color:#79c0ff }
+  /* NameVariableClass */ .chroma .vc { color:#79c0ff }
+  /* NameVariableGlobal */ .chroma .vg { color:#79c0ff }
+  /* NameVariableInstance */ .chroma .vi { color:#79c0ff }
+  /* NameVariableMagic */ .chroma .vm { color:#79c0ff }
+  /* NameFunction */ .chroma .nf { color:#d2a8ff;font-weight:bold }
+  /* NameFunctionMagic */ .chroma .fm { color:#d2a8ff;font-weight:bold }
+  /* Literal */ .chroma .l { color:#a5d6ff }
+  /* LiteralDate */ .chroma .ld { color:#79c0ff }
+  /* LiteralString */ .chroma .s { color:#a5d6ff }
+  /* LiteralStringAffix */ .chroma .sa { color:#79c0ff }
+  /* LiteralStringBacktick */ .chroma .sb { color:#a5d6ff }
+  /* LiteralStringChar */ .chroma .sc { color:#a5d6ff }
+  /* LiteralStringDelimiter */ .chroma .dl { color:#79c0ff }
+  /* LiteralStringDoc */ .chroma .sd { color:#a5d6ff }
+  /* LiteralStringDouble */ .chroma .s2 { color:#a5d6ff }
+  /* LiteralStringEscape */ .chroma .se { color:#79c0ff }
+  /* LiteralStringHeredoc */ .chroma .sh { color:#79c0ff }
+  /* LiteralStringInterpol */ .chroma .si { color:#a5d6ff }
+  /* LiteralStringOther */ .chroma .sx { color:#a5d6ff }
+  /* LiteralStringRegex */ .chroma .sr { color:#79c0ff }
+  /* LiteralStringSingle */ .chroma .s1 { color:#a5d6ff }
+  /* LiteralStringSymbol */ .chroma .ss { color:#a5d6ff }
+  /* LiteralNumber */ .chroma .m { color:#a5d6ff }
+  /* LiteralNumberBin */ .chroma .mb { color:#a5d6ff }
+  /* LiteralNumberFloat */ .chroma .mf { color:#a5d6ff }
+  /* LiteralNumberHex */ .chroma .mh { color:#a5d6ff }
+  /* LiteralNumberInteger */ .chroma .mi { color:#a5d6ff }
+  /* LiteralNumberIntegerLong */ .chroma .il { color:#a5d6ff }
+  /* LiteralNumberOct */ .chroma .mo { color:#a5d6ff }
+  /* Operator */ .chroma .o { color:#ff7b72;font-weight:bold }
+  /* OperatorWord */ .chroma .ow { color:#ff7b72;font-weight:bold }
+  /* OperatorReserved */ .chroma .or { color:#ff7b72;font-weight:bold }
+  /* Comment */ .chroma .c { color:#8b949e;font-style:italic }
+  /* CommentHashbang */ .chroma .ch { color:#8b949e;font-style:italic }
+  /* CommentMultiline */ .chroma .cm { color:#8b949e;font-style:italic }
+  /* CommentSingle */ .chroma .c1 { color:#8b949e;font-style:italic }
+  /* CommentSpecial */ .chroma .cs { color:#8b949e;font-weight:bold;font-style:italic }
+  /* CommentPreproc */ .chroma .cp { color:#8b949e;font-weight:bold;font-style:italic }
+  /* CommentPreprocFile */ .chroma .cpf { color:#8b949e;font-weight:bold;font-style:italic }
+  /* GenericDeleted */ .chroma .gd { color:#ffa198;background-color:#490202 }
+  /* GenericEmph */ .chroma .ge { font-style:italic }
+  /* GenericError */ .chroma .gr { color:#ffa198 }
+  /* GenericHeading */ .chroma .gh { color:#79c0ff;font-weight:bold }
+  /* GenericInserted */ .chroma .gi { color:#56d364;background-color:#0f5323 }
+  /* GenericOutput */ .chroma .go { color:#8b949e }
+  /* GenericPrompt */ .chroma .gp { color:#8b949e }
+  /* GenericStrong */ .chroma .gs { font-weight:bold }
+  /* GenericSubheading */ .chroma .gu { color:#79c0ff }
+  /* GenericTraceback */ .chroma .gt { color:#ff7b72 }
+  /* GenericUnderline */ .chroma .gl { text-decoration:underline }
+  /* TextWhitespace */ .chroma .w { color:#6e7681 }
+}
+
+/* ---------- chroma overrides: keep the paper palette, take only the tokens ---------- */
+.chroma, .bg { background-color: transparent !important; }
