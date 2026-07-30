@@ -23,7 +23,7 @@ When the VM needs all Java threads stopped, it does not stop them. It asks, and 
 waits. Each thread notices the request at its next poll point and parks itself. Only
 once the last thread has parked can the operation begin.
 
-{{< fig src="/diagrams/safepoint-anatomy.svg" alt="Timeline of a safepoint pause showing three threads reaching poll points at different times" >}}
+{{< fig src="/diagrams/safepoint-anatomy.svg" alt="Timeline of a safepoint pause showing three threads reaching poll points at different times, annotated with the five phases JDK 21 reports and a total that excludes time since last" >}}
 The gap between the request and the last thread parking is time to safepoint. It is not
 GC work, so it does not appear in the pause figure most people read.
 {{< /fig >}}

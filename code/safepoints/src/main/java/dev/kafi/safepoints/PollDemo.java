@@ -12,11 +12,21 @@ package dev.kafi.safepoints;
  *
  * Note on compilation state: the interpreter polls on every backedge, so the loop
  * has to reach C2 before the effect can appear. That is why spin() warms count()
- * with short trip counts before the long one.
+ * with short trip counts before the measured phase.
+ *
+ * Note on duration: an int-counted loop cannot be stretched to cover an arbitrary
+ * measurement window, because the trip count saturates at Integer.MAX_VALUE, which
+ * on a current CPU is a fraction of a second. spin() therefore re-enters count()
+ * until told to stop, so the spinner is inside a poll-free loop for essentially the
+ * whole window rather than only the first round. The consequence to keep in mind
+ * when reading the numbers: each call boundary is itself a poll point, so a request
+ * that happens to land on one sees a short wait. The distribution matters, not any
+ * single round.
  */
 public final class PollDemo {
 
     private static volatile long sink;
+    private static volatile boolean running = true;
 
     private PollDemo() {
     }
@@ -32,11 +42,15 @@ public final class PollDemo {
     // endregion:spinner
 
     private static void spin() {
-        // Drive count() to a C2 compilation before the long-running call.
+        // Drive count() to a C2 compilation before the measured phase.
         for (int w = 0; w < 20_000; w++) {
             sink = count(10_000);
         }
-        sink = count(Integer.MAX_VALUE);
+        // One full-range call is much shorter than the probe loop, so keep re-entering
+        // until the prober is done. The volatile read is outside the hot loop.
+        while (running) {
+            sink = count(Integer.MAX_VALUE);
+        }
     }
 
     // region:probe
@@ -60,6 +74,8 @@ public final class PollDemo {
 
         Thread.sleep(1_000);
         probe(rounds);
+        running = false;
+        spinner.join(5_000);
 
         System.out.println("sink = " + sink);
     }

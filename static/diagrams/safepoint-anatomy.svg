@@ -1,53 +1,87 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 272" width="680" height="272" role="img" aria-labelledby="t d">
-<title id="t">Anatomy of a safepoint pause</title>
-<desc id="d">Three application threads run until a VM operation is requested. They reach their poll points at different times. The gap between the request and the last thread parking is the time to safepoint.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 300" width="920" height="300" role="img" aria-labelledby="t d">
+<title id="t">Anatomy of a safepoint pause, as JDK 21 logs it</title>
+<desc id="d">Three application threads run until a VM operation is requested. Each stops at its next poll point, at a different time; the last one to stop is the straggler. The five phases JDK 21 reports are laid out left to right: time since last, reaching safepoint, cleanup, at safepoint, and leaving safepoint. The pause total covers the last four and excludes time since last.</desc>
 <style>
   text { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; fill: #6f6a60; }
+  .phase { font-size: 11px; fill: #453f38; }
+  .desc { font-size: 11px; fill: #6f6a60; }
   .band-run { fill: #eae5d9; }
   .band-ttsp { fill: #f0d9c9; }
+  .band-clean { fill: #e8ece6; }
   .band-op { fill: #dde5dd; }
+  .band-leave { fill: #e8ece6; }
   .lane { stroke: #453f38; stroke-width: 1.5; }
   .lane-park { stroke: #a9a29a; stroke-width: 0.75; stroke-dasharray: 2 4; }
   .lane-strag { stroke: #9e3618; stroke-width: 1.5; }
   .mark { stroke: #6f6a60; stroke-width: 0.75; stroke-dasharray: 3 3; }
+  .span { stroke: #6f6a60; stroke-width: 0.75; fill: none; }
   .dot { fill: #453f38; }
   .dot-strag { fill: #9e3618; }
   @media (prefers-color-scheme: dark) {
     text { fill: #918b7e; }
+    .phase { fill: #cbc5b8; }
+    .desc { fill: #918b7e; }
     .band-run { fill: #232319; }
     .band-ttsp { fill: #35251d; }
+    .band-clean { fill: #1b221c; }
     .band-op { fill: #1f2a22; }
+    .band-leave { fill: #1b221c; }
     .lane { stroke: #cbc5b8; }
     .lane-park { stroke: #5d574c; }
     .lane-strag { stroke: #e0794f; }
     .mark { stroke: #918b7e; }
+    .span { stroke: #918b7e; }
     .dot { fill: #cbc5b8; }
     .dot-strag { fill: #e0794f; }
   }
 </style>
-<rect class="band-run" x="100" y="62" width="160" height="140" rx="3"/>
-<rect class="band-ttsp" x="260" y="62" width="210" height="140" rx="3"/>
-<rect class="band-op" x="470" y="62" width="110" height="140" rx="3"/>
-<text x="260" y="48" text-anchor="middle">VM op requested</text>
-<text x="470" y="48" text-anchor="middle">last thread parked</text>
-<line class="mark" x1="260" y1="56" x2="260" y2="208"/>
-<line class="mark" x1="470" y1="56" x2="470" y2="208"/>
-<text x="40" y="101">thread 1</text>
-<line class="lane" x1="100" y1="97" x2="300" y2="97"/>
-<line class="lane-park" x1="300" y1="97" x2="580" y2="97"/>
-<circle class="dot" cx="300" cy="97" r="3.5"/>
-<text x="40" y="141">thread 2</text>
-<line class="lane" x1="100" y1="137" x2="352" y2="137"/>
-<line class="lane-park" x1="352" y1="137" x2="580" y2="137"/>
-<circle class="dot" cx="352" cy="137" r="3.5"/>
-<text x="40" y="181">thread 3</text>
-<line class="lane-strag" x1="100" y1="177" x2="470" y2="177"/>
-<line class="lane-park" x1="470" y1="177" x2="580" y2="177"/>
-<circle class="dot-strag" cx="470" cy="177" r="4"/>
-<text x="180" y="226" text-anchor="middle">running</text>
-<text x="180" y="244" text-anchor="middle">time since last</text>
-<text x="365" y="226" text-anchor="middle">walking to a poll point</text>
-<text x="365" y="244" text-anchor="middle">reaching safepoint</text>
-<text x="525" y="226" text-anchor="middle">VM op runs</text>
-<text x="525" y="244" text-anchor="middle">at safepoint</text>
+
+<!-- phase bands: running | reaching | cleanup | at safepoint | leaving -->
+<rect class="band-run" x="100" y="60" width="200" height="138"/>
+<rect class="band-ttsp" x="300" y="60" width="230" height="138"/>
+<rect class="band-clean" x="530" y="60" width="60" height="138"/>
+<rect class="band-op" x="590" y="60" width="150" height="138"/>
+<rect class="band-leave" x="740" y="60" width="120" height="138"/>
+
+<!-- the two moments that matter -->
+<text x="300" y="46" text-anchor="middle">VM op requested</text>
+<text x="530" y="46" text-anchor="middle">last thread parked</text>
+<line class="mark" x1="300" y1="54" x2="300" y2="204"/>
+<line class="mark" x1="530" y1="54" x2="530" y2="204"/>
+
+<!-- thread 1: reaches a poll point soon after the request -->
+<text x="40" y="99">thread 1</text>
+<line class="lane" x1="100" y1="95" x2="340" y2="95"/>
+<line class="lane-park" x1="340" y1="95" x2="860" y2="95"/>
+<line class="lane" x1="860" y1="95" x2="890" y2="95"/>
+<circle class="dot" cx="340" cy="95" r="3.5"/>
+
+<!-- thread 2: a little later -->
+<text x="40" y="139">thread 2</text>
+<line class="lane" x1="100" y1="135" x2="430" y2="135"/>
+<line class="lane-park" x1="430" y1="135" x2="860" y2="135"/>
+<line class="lane" x1="860" y1="135" x2="890" y2="135"/>
+<circle class="dot" cx="430" cy="135" r="3.5"/>
+
+<!-- thread 3: the straggler, deep in a poll-free loop -->
+<text x="40" y="179">thread 3</text>
+<line class="lane-strag" x1="100" y1="175" x2="530" y2="175"/>
+<line class="lane-park" x1="530" y1="175" x2="860" y2="175"/>
+<line class="lane" x1="860" y1="175" x2="890" y2="175"/>
+<circle class="dot-strag" cx="530" cy="175" r="4"/>
+
+<!-- the five phases as JDK 21 names them in the log -->
+<text class="phase" x="200" y="220" text-anchor="middle">Time since last</text>
+<text class="desc" x="200" y="236" text-anchor="middle">running</text>
+<text class="phase" x="415" y="220" text-anchor="middle">Reaching safepoint</text>
+<text class="desc" x="415" y="236" text-anchor="middle">walking to a poll point</text>
+<text class="phase" x="560" y="220" text-anchor="middle">Cleanup</text>
+<text class="phase" x="665" y="220" text-anchor="middle">At safepoint</text>
+<text class="desc" x="665" y="236" text-anchor="middle">VM op runs</text>
+<text class="phase" x="800" y="220" text-anchor="middle">Leaving safepoint</text>
+<text class="desc" x="800" y="236" text-anchor="middle">threads released</text>
+
+<!-- Total spans the last four phases only; time since last is not part of the pause -->
+<path class="span" d="M300 252 L300 258 L860 258 L860 252"/>
+<text x="580" y="276" text-anchor="middle">Total = reaching + cleanup + at + leaving</text>
 </svg>

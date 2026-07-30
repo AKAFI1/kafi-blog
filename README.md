@@ -56,6 +56,11 @@ so a broken snippet cannot reach production.
 Regions must have unique names within a file, and a region name must not be a prefix of
 another region name in the same file.
 
+Drafts are excluded from the production build, so a shortcode on a draft page never runs
+there and a typo in one would surface only on the day the post is published. CI therefore
+runs `hugo -D` into a throwaway directory first, purely to execute the shortcodes. That
+step fails the job before anything is deployed.
+
 ## Disclosure
 
 Edit `data/environment.yaml` once. Every article that calls `{{< env >}}` renders the same
@@ -108,21 +113,41 @@ Built and verified with Hugo 0.164.0 extended on Linux, JDK 21.0.11:
 - A missing region fails the build with a useful message.
 - `PollDemo.java` compiles with `javac --release 21` and runs.
 
-Not tested, because Maven Central was unreachable in the environment this was scaffolded
-in:
+Since verified with Hugo 0.164.0 extended and Maven 3.9.16 on macOS arm64, Zulu 21.48.17:
 
-- `mvn verify` against the two `pom.xml` files. Run it locally before pushing.
+- `mvn -B verify` against both `pom.xml` files. Passes, no warnings under `-Xlint:all`.
+- Both builds clean: `hugo --gc --minify` (9 pages) and `hugo -D` (16 pages).
+- All three shortcodes checked by reading the generated HTML, not just by exit code.
+- A broken snippet, both a missing region and a missing file, fails the build with the
+  file and line of the calling markdown.
+
+Still not tested:
+
 - The GitHub Actions workflow. Expect one round of fixing on first push.
 
 ## Note on the sample harness
 
-`PollDemo` runs, but it is not yet a valid experiment. On a single test run under
-`-XX:+UseSerialGC` on JDK 21.0.11 the first requested collection showed a 21 ms
-`Reaching safepoint` and later ones showed microseconds, because `count(Integer.MAX_VALUE)`
-completes in about a second and the measurement window closes with it. Before this becomes
-an article the spinner needs to run for the whole measurement period, and one run on one
-collector is not evidence of anything.
+The spinner now outlives the probe loop. It previously made one
+`count(Integer.MAX_VALUE)` call, which finishes in well under a second, so only the
+first requested collection measured anything and every later round collapsed to
+microseconds. `spin()` re-enters `count()` until the prober sets `running = false`.
 
-Also worth correcting: JDK 21 logs five phases, not three. `Time since last`,
-`Reaching safepoint`, `Cleanup`, `At safepoint`, `Leaving safepoint`. The committed
-diagram simplifies to three and should be redrawn or captioned to say so.
+An int-counted loop cannot simply be made longer: the trip count saturates at
+`Integer.MAX_VALUE`, which on a current CPU is a fraction of a second. Re-entering is
+the workaround, and it has a consequence worth stating in the article. Each call
+boundary is itself a poll point, so a request that lands on one sees a short wait. Read
+the distribution, never a single round.
+
+Measured on the machine this was last built on, `-XX:+UseSerialGC`, Zulu 21.48.17,
+Apple Silicon, 12 rounds: round 0 blocked 177 ms, every later round blocked between
+1.01 and 1.79 s. With `-Xlog:safepoint` the same run showed `Reaching safepoint` of
+about 1.1 s against an `At safepoint` of 1.4 ms, which is the whole point of the piece:
+a tool that reports only collection time would call that a 1.4 ms pause.
+
+Still not evidence of anything: one collector, one machine, no percentiles, no repeat
+runs. That work is unchanged and still ahead of the article.
+
+The diagram has been redrawn to the five phases JDK 21 actually logs: `Time since
+last`, `Reaching safepoint`, `Cleanup`, `At safepoint`, `Leaving safepoint`. It also
+annotates that `Total` is the sum of the last four and excludes `Time since last`,
+which was verified against the log on three consecutive collections rather than assumed.
