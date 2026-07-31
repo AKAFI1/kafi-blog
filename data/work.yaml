@@ -1,12 +1,12 @@
 # Drives the work section on the home page. Deliberately no stack list and no
 # certifications: the evidence for what I can do is the writing, not a badge count.
 # Client systems are never named here, per the standards in content/about.md.
-focus: "Client systems are never named here."
+focus: "Experience across the world of Computing"
 
 roles:
   - role: "Systems Engineer / Consultant"
     org: "Adaptive Financial, London"
-    period: "Sep 2024 —"
+    period: "2024-current"
     note: "Low-latency, event-driven trading systems in Java. Aeron, Agrona, SBE, and the measurement discipline needed to know whether a change actually helped."
 
 education:
