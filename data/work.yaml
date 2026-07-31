@@ -4,8 +4,8 @@
 focus: "Client systems are never named here."
 
 roles:
-  - role: "Systems engineer"
-    org: "Financial technology consultancy, London"
+  - role: "Systems Engineer / Consultant"
+    org: "Adaptive Financial, London"
     period: "Sep 2024 —"
     note: "Low-latency, event-driven trading systems in Java. Aeron, Agrona, SBE, and the measurement discipline needed to know whether a change actually helped."
 
