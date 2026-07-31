@@ -17,6 +17,5 @@ roles:
 education:
   - role: "BSc Computer Science"
     org: "King's College London"
-    # TODO: add the years. Left blank rather than guessed.
-    period: ""
+    period: "2021-2024"
     note: ""
