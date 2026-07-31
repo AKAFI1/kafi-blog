@@ -9,6 +9,11 @@ roles:
     period: "2024-current"
     note: "Low-latency, event-driven trading systems in Java. Aeron, Agrona, SBE, and the measurement discipline needed to know whether a change actually helped."
 
+  - role: "Software Developer"
+    org: "Ofcom"
+    period: "2023"
+    note: "App safety and protection team. Machine learning and computer vision projects."
+
 education:
   - role: "BSc Computer Science"
     org: "King's College London"
