@@ -1,4 +1,4 @@
-baseURL = "https://example.dev/"
+baseURL = "https://kafi.dev/"
 locale = "en-gb"
 title = "Ahmed Kafi"
 enableRobotsTXT = true
@@ -10,8 +10,11 @@ enableGitInfo = false
 [params]
   tagline = "Low-latency Java, the JVM, and trading systems infrastructure."
   linkedin = "https://linkedin.com/in/ahmed-kafi-9b0877242"
-  github = "https://github.com/CHANGEME"
-  email = "CHANGEME@example.dev"
+  # github is the profile, linked from the masthead. repo is this repository, and is
+  # what snippet.html builds blob links from, so it needs the repo path, not the user.
+  github = "https://github.com/AKAFI1"
+  repo = "https://github.com/AKAFI1/kafi-blog"
+  email = "prokafiahmed@gmail.com"
 
 [markup.goldmark.renderer]
   unsafe = true

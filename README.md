@@ -49,9 +49,11 @@ Reference it from markdown:
 {{< snippet file="code/safepoints/src/main/java/dev/kafi/safepoints/PollDemo.java" region="hot-loop" >}}
 ```
 
-The shortcode dedents the region and links the caption to the file on GitHub. A missing
-file or a missing region is a build error with the file and line of the calling markdown,
-so a broken snippet cannot reach production.
+The shortcode dedents the region and links the caption to the file on GitHub, building the
+URL from `params.repo`. That is deliberately a different setting from `params.github`: the
+masthead wants a profile URL, a blob link needs the repository path, and one value cannot
+be both. A missing file or a missing region is a build error with the file and line of the
+calling markdown, so a broken snippet cannot reach production.
 
 Regions must have unique names within a file, and a region name must not be a prefix of
 another region name in the same file.
@@ -70,8 +72,8 @@ block. All fields currently read `CHANGEME`.
 
 1. Push to `main` on a public repo.
 2. Settings, Pages, Source: GitHub Actions.
-3. Set `baseURL` in `hugo.toml` to the real domain.
-4. Add `static/CNAME` containing the bare domain, e.g. `ahmedkafi.dev`.
+3. Set `baseURL` in `hugo.toml` to the real domain. Done, `https://kafi.dev/`.
+4. Add `static/CNAME` containing the bare domain. Done, `kafi.dev`.
 5. Settings, Pages, Custom domain: enter the domain, then tick Enforce HTTPS once the
    certificate is issued.
 6. DNS at the registrar:
@@ -84,8 +86,12 @@ block. All fields currently read `CHANGEME`.
 
 ## Things to change before this is yours
 
-- `hugo.toml`: `baseURL`, `params.github`, `params.email`.
-- `data/environment.yaml`: all of it.
+- `hugo.toml`: done. `baseURL` is `https://kafi.dev/`, `params.github` is the profile,
+  `params.repo` is this repository, `params.email` is set. `params.repo` is a guess at
+  the repository name; correct it if the repo is not called `kafi-blog`, or every snippet
+  caption will link to a 404.
+- `data/environment.yaml`: all of it. Still `CHANGEME`, and it renders into every article
+  that calls `{{< env >}}`.
 - `content/about.md`: written from your own notes, edit the register to taste.
 - `.github/workflows/ci.yml`: `HUGO_VERSION` is pinned to 0.164.0. Pin deliberately,
   and bump it when you choose to, not automatically.
