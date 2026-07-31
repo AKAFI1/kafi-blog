@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 400" width="840" height="400" role="img" aria-labelledby="hr-t hr-d" class="dg-hr">
+<title id="hr-t">How a stack frame refers to objects on the heap</title>
+<desc id="hr-d">A stack frame on the left holds four local variables. The primitive local qty holds the value five directly in the frame. Two reference locals, a and b, both point at the same Order object on the heap, showing that two references can name one object. The local c is null and points at nothing at all. On the heap, the Order object contains its own primitive field qty holding the value five inside the object rather than on the stack, and a reference field symbol pointing to a separate String object.</desc>
+<defs>
+  <marker id="hr-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+    <path class="ah" d="M0 0 L10 5 L0 10 Z"/>
+  </marker>
+</defs>
+<style>
+  .dg-hr text { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; fill: var(--muted, #6f6a60); }
+  .dg-hr .em { fill: var(--ink-soft, #453f38); }
+  .dg-hr .sm { font-size: 11px; }
+  .dg-hr .box { fill: none; stroke: var(--ink-soft, #453f38); stroke-width: 1.2; }
+  .dg-hr .region { fill: none; stroke: var(--muted, #6f6a60); stroke-width: 1; stroke-dasharray: 4 4; }
+  .dg-hr .head { fill: color-mix(in srgb, var(--ink-soft, #453f38) 10%, transparent); }
+  .dg-hr .valslot { fill: var(--band, #f0d9c9); }
+  .dg-hr .sep { stroke: var(--ink-soft, #453f38); stroke-width: 0.75; }
+  .dg-hr .ref { stroke: var(--accent, #9e3618); stroke-width: 1.3; fill: none; }
+  .dg-hr .ah { fill: var(--accent, #9e3618); }
+  .dg-hr .dot { fill: var(--accent, #9e3618); }
+  .dg-hr .nul { stroke: var(--muted, #6f6a60); stroke-width: 1.3; }
+  .dg-hr .obj { fill: color-mix(in srgb, var(--ink-soft, #453f38) 6%, transparent); }
+</style>
+
+<!-- ============ the stack frame ============ -->
+<rect class="head" x="40" y="60" width="250" height="30"/>
+<text class="em" x="52" y="80">frame: place()</text>
+
+<rect class="valslot" x="40" y="90" width="250" height="44"/>
+<text x="52" y="118">int qty = 5</text>
+
+<text x="52" y="162">Order a</text>
+<circle class="dot" cx="278" cy="156" r="3.5"/>
+<text x="52" y="206">Order b</text>
+<circle class="dot" cx="278" cy="200" r="3.5"/>
+<text x="52" y="250">Order c = null</text>
+
+<line class="sep" x1="40" y1="90" x2="290" y2="90"/>
+<line class="sep" x1="40" y1="134" x2="290" y2="134"/>
+<line class="sep" x1="40" y1="178" x2="290" y2="178"/>
+<line class="sep" x1="40" y1="222" x2="290" y2="222"/>
+<rect class="box" x="40" y="60" width="250" height="206"/>
+<text class="sm" x="40" y="288">the value itself sits in the frame</text>
+
+<!-- ============ the heap ============ -->
+<text class="em" x="645" y="32" text-anchor="middle">heap</text>
+<rect class="region" x="470" y="40" width="350" height="332"/>
+
+<!-- Order object -->
+<rect class="obj" x="505" y="76" width="285" height="120"/>
+<rect class="head" x="505" y="76" width="285" height="28"/>
+<text class="em" x="517" y="95">Order</text>
+<text x="517" y="132">int qty = 5</text>
+<text x="517" y="166">String symbol</text>
+<circle class="dot" cx="770" cy="160" r="3.5"/>
+<line class="sep" x1="505" y1="104" x2="790" y2="104"/>
+<line class="sep" x1="505" y1="142" x2="790" y2="142"/>
+<rect class="box" x="505" y="76" width="285" height="120"/>
+<text class="sm" x="505" y="216">a primitive field sits inside the object</text>
+
+<!-- String object -->
+<rect class="obj" x="560" y="266" width="230" height="70"/>
+<rect class="head" x="560" y="266" width="230" height="28"/>
+<text class="em" x="572" y="285">String</text>
+<text x="572" y="320">"VOD.L"</text>
+<rect class="box" x="560" y="266" width="230" height="70"/>
+
+<!-- ============ the references ============ -->
+<text class="sm" x="398" y="92" text-anchor="middle">two references, one object</text>
+<path class="ref" d="M282 156 C 360 156, 430 118, 501 114" marker-end="url(#hr-arrow)"/>
+<path class="ref" d="M282 200 C 360 200, 430 140, 501 136" marker-end="url(#hr-arrow)"/>
+
+<!-- a field can hold a reference too -->
+<path class="ref" d="M774 160 C 806 186, 800 240, 726 262" marker-end="url(#hr-arrow)"/>
+
+<!-- null points at nothing -->
+<line class="nul" x1="282" y1="244" x2="372" y2="244"/>
+<line class="nul" x1="378" y1="238" x2="390" y2="250"/>
+<line class="nul" x1="390" y1="238" x2="378" y2="250"/>
+<text class="sm" x="282" y="268">null is the absence of a reference,</text>
+<text class="sm" x="282" y="282">not an empty slot in the heap</text>
+</svg>

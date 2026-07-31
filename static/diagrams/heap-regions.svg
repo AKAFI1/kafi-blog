@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" width="800" height="300" role="img" aria-labelledby="hg-t hg-d" class="dg-hg">
+<title id="hg-t">The Java heap next to Metaspace, which is not part of it</title>
+<desc id="hg-d">On the left, the Java heap, bounded by the maximum heap size, is divided into a young generation containing Eden and two survivor spaces, and an old generation. On the right, drawn as a separate region, is Metaspace, which holds class metadata and lives in native memory bounded by its own flag. Metaspace replaced the permanent generation, which was removed in Java 8, and is not part of the heap.</desc>
+<style>
+  .dg-hg text { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; fill: var(--muted, #6f6a60); }
+  .dg-hg .em { fill: var(--ink-soft, #453f38); }
+  .dg-hg .sm { font-size: 11px; }
+  .dg-hg .box { fill: none; stroke: var(--ink-soft, #453f38); stroke-width: 1.2; }
+  .dg-hg .inner { fill: none; stroke: var(--muted, #6f6a60); stroke-width: 1; }
+  .dg-hg .young { fill: color-mix(in srgb, var(--ink-soft, #453f38) 7%, transparent); }
+  .dg-hg .old { fill: color-mix(in srgb, var(--ink-soft, #453f38) 12%, transparent); }
+  .dg-hg .native { fill: var(--band, #f0d9c9); }
+</style>
+
+<!-- ============ Java heap ============ -->
+<text class="em" x="275" y="42" text-anchor="middle">Java heap &mdash; bounded by -Xmx</text>
+
+<rect class="young" x="60" y="94" width="240" height="128"/>
+<rect class="inner" x="60" y="94" width="240" height="128"/>
+<text class="sm" x="180" y="114" text-anchor="middle">young generation</text>
+<rect class="inner" x="72" y="130" width="128" height="80"/>
+<text class="sm" x="136" y="175" text-anchor="middle">Eden</text>
+<rect class="inner" x="206" y="130" width="40" height="80"/>
+<text class="sm" x="226" y="175" text-anchor="middle">S0</text>
+<rect class="inner" x="252" y="130" width="40" height="80"/>
+<text class="sm" x="272" y="175" text-anchor="middle">S1</text>
+
+<rect class="old" x="320" y="94" width="172" height="128"/>
+<rect class="inner" x="320" y="94" width="172" height="128"/>
+<text class="sm" x="406" y="114" text-anchor="middle">old generation</text>
+<text class="sm" x="406" y="175" text-anchor="middle">survivors of enough</text>
+<text class="sm" x="406" y="190" text-anchor="middle">young collections</text>
+
+<rect class="box" x="40" y="58" width="470" height="182"/>
+
+<!-- ============ Metaspace, deliberately outside ============ -->
+<text class="em" x="665" y="42" text-anchor="middle">Metaspace &mdash; native memory</text>
+<rect class="native" x="580" y="108" width="170" height="84"/>
+<rect class="inner" x="580" y="108" width="170" height="84"/>
+<text class="sm" x="665" y="145" text-anchor="middle">class metadata</text>
+<text class="sm" x="665" y="163" text-anchor="middle">-XX:MaxMetaspaceSize</text>
+<rect class="box" x="560" y="58" width="210" height="182"/>
+
+<!-- ============ notes ============ -->
+<text class="sm" x="40" y="266">PermGen was removed in Java 8 (JEP 122); Metaspace replaced it.</text>
+<text class="sm" x="40" y="284">Eden, survivors and old are the generational layout, which is collector-specific.</text>
+</svg>

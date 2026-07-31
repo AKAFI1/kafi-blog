@@ -1,0 +1,29 @@
+{{- /* Wrap every table in a scroll container. A table with more columns than a phone can
+       fit sets its own min-content width, and without a wrapper that width pushes the
+       whole page into horizontal scrolling. Inside a wrapper only the table scrolls. */ -}}
+<div class="tablewrap">
+  <table>
+    {{- with .THead }}
+    <thead>
+      {{- range . }}
+      <tr>
+        {{- range . }}
+        <th{{ with .Alignment }} style="text-align: {{ . }}"{{ end }}>{{ .Text }}</th>
+        {{- end }}
+      </tr>
+      {{- end }}
+    </thead>
+    {{- end }}
+    {{- with .TBody }}
+    <tbody>
+      {{- range . }}
+      <tr>
+        {{- range . }}
+        <td{{ with .Alignment }} style="text-align: {{ . }}"{{ end }}>{{ .Text }}</td>
+        {{- end }}
+      </tr>
+      {{- end }}
+    </tbody>
+    {{- end }}
+  </table>
+</div>

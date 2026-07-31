@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 322" width="760" height="322" role="img" aria-labelledby="sf-t sf-d" class="dg-sf">
+<title id="sf-t">A thread stack made of call frames</title>
+<desc id="sf-d">A single thread's stack drawn as a column. Three frames are stacked: main at the bottom, then price, then helper at the top, which is the currently executing method. Above them is unused stack space. Frames are pushed when a method is called and popped when it returns. One frame is expanded to show what it contains: the return address, the parameters passed by value, local primitives holding their values directly, and local reference variables holding a reference rather than an object.</desc>
+<style>
+  .dg-sf text { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; fill: var(--muted, #6f6a60); }
+  .dg-sf .em { fill: var(--ink-soft, #453f38); }
+  .dg-sf .sm { font-size: 11px; }
+  .dg-sf .box { fill: none; stroke: var(--ink-soft, #453f38); stroke-width: 1.2; }
+  .dg-sf .frame { fill: color-mix(in srgb, var(--ink-soft, #453f38) 8%, transparent); }
+  .dg-sf .frame-top { fill: var(--band, #f0d9c9); }
+  .dg-sf .unused { fill: none; }
+  .dg-sf .sep { stroke: var(--ink-soft, #453f38); stroke-width: 1; }
+  .dg-sf .hair { stroke: var(--muted, #6f6a60); stroke-width: 0.75; stroke-dasharray: 3 3; }
+  .dg-sf .arrow { stroke: var(--accent, #9e3618); stroke-width: 1.2; fill: none; }
+  .dg-sf .arrowhead { fill: var(--accent, #9e3618); }
+</style>
+
+<!-- the stack column -->
+<text class="em" x="185" y="26" text-anchor="middle">one thread's stack</text>
+<rect class="unused" x="80" y="40" width="210" height="100"/>
+<text class="sm" x="185" y="95" text-anchor="middle">unused</text>
+
+<rect class="frame-top" x="80" y="140" width="210" height="56"/>
+<rect class="frame" x="80" y="196" width="210" height="56"/>
+<rect class="frame" x="80" y="252" width="210" height="56"/>
+
+<text class="em" x="185" y="173" text-anchor="middle">helper()</text>
+<text class="sm" x="185" y="187" text-anchor="middle">running now</text>
+<text class="em" x="185" y="229" text-anchor="middle">price()</text>
+<text class="em" x="185" y="285" text-anchor="middle">main()</text>
+
+<line class="sep" x1="80" y1="140" x2="290" y2="140"/>
+<line class="sep" x1="80" y1="196" x2="290" y2="196"/>
+<line class="sep" x1="80" y1="252" x2="290" y2="252"/>
+<rect class="box" x="80" y="40" width="210" height="268"/>
+
+<!-- direction of growth -->
+<path class="arrow" d="M56 300 L56 152"/>
+<path class="arrowhead" d="M52 154 L56 144 L60 154 Z"/>
+<text class="sm" transform="rotate(-90 34 220)" x="34" y="220" text-anchor="middle">push on call, pop on return</text>
+
+<!-- what a frame holds -->
+<line class="hair" x1="290" y1="168" x2="386" y2="168"/>
+<rect class="box" x="386" y="112" width="344" height="126"/>
+<text class="em" x="402" y="134">inside one frame</text>
+<text class="sm" x="402" y="158">return address</text>
+<text class="sm" x="402" y="178">parameters, copied in by value</text>
+<text class="sm" x="402" y="198">local primitives, holding the value itself</text>
+<text class="sm" x="402" y="218">local references, holding a reference, not an object</text>
+</svg>

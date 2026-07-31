@@ -1,7 +1,19 @@
 {{- $src := .Get "src" -}}
 {{- $alt := .Get "alt" | default "" -}}
 {{- $wide := .Get "wide" | default "true" -}}
+{{- $path := printf "static%s" $src -}}
+{{- $inline := and (strings.HasSuffix $src ".svg") (fileExists $path) -}}
 <figure class="fig{{ if eq $wide "true" }} fig--wide{{ end }}">
-  <img src="{{ $src | relURL }}" alt="{{ $alt }}" loading="lazy">
+  {{- if $inline -}}
+    {{/* Inlined rather than <img src>: an <img> loads the SVG as a separate document,
+         where the page's data-theme and its CSS custom properties are both invisible,
+         so a reader who overrides the theme would get a diagram in the other palette.
+         Inlined, the diagram resolves var(--ink) and friends against the page.
+         Accessibility then comes from the SVG's own <title>/<desc> and role="img", so
+         every inlined diagram must carry them, with ids unique across the page. */}}
+    {{ os.ReadFile $path | safeHTML }}
+  {{- else -}}
+    <img src="{{ $src | relURL }}" alt="{{ $alt }}" loading="lazy">
+  {{- end -}}
   {{- with .Inner -}}<figcaption>{{ . | markdownify }}</figcaption>{{- end -}}
 </figure>

@@ -13,6 +13,7 @@
 
   <modules>
     <module>safepoints</module>
+    <module>memory</module>
   </modules>
 
   <properties>
