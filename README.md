@@ -86,10 +86,10 @@ block. All fields currently read `CHANGEME`.
 
 ## Things to change before this is yours
 
-- `hugo.toml`: done. `baseURL` is `https://kafi.dev/`, `params.github` is the profile,
-  `params.repo` is this repository, `params.email` is set. `params.repo` is a guess at
-  the repository name; correct it if the repo is not called `kafi-blog`, or every snippet
-  caption will link to a 404.
+- `hugo.toml`: done and confirmed. `baseURL` is `https://kafi.dev/`, `params.github` is
+  the profile, `params.repo` is `https://github.com/AKAFI1/kafi-blog`, `params.email` is
+  set. If the repository is ever renamed, `params.repo` has to move with it or every
+  snippet caption links to a 404.
 - `data/environment.yaml`: all of it. Still `CHANGEME`, and it renders into every article
   that calls `{{< env >}}`.
 - `content/about.md`: written from your own notes, edit the register to taste.
