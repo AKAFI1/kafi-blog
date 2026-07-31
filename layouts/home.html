@@ -1,25 +1,90 @@
 {{ define "main" }}
-<section class="intro">
-  <h1>{{ .Site.Title }}</h1>
-  <p class="intro__tagline">{{ .Site.Params.tagline }}</p>
-  {{ with .Content }}<div class="intro__body">{{ . }}</div>{{ end }}
+{{- $posts := where site.RegularPages "Section" "posts" -}}
+{{- $work := hugo.Data.work -}}
+
+<section class="hero">
+  <div class="hero__lede">
+    <p class="eyebrow" style="--i:0">Systems engineer &middot; London</p>
+    <h1 class="hero__name" style="--i:1">{{ .Site.Title }}</h1>
+    <p class="hero__tagline" style="--i:2">{{ .Site.Params.tagline }}</p>
+    {{ with .Content }}<div class="hero__body" style="--i:3">{{ . }}</div>{{ end }}
+    <p class="hero__actions" style="--i:4">
+      <a class="btn" href="{{ "/posts/" | relURL }}">Read the writing</a>
+      {{ with .Site.Params.email }}<a class="btn btn--quiet" href="mailto:{{ . }}">{{ . }}</a>{{ end }}
+    </p>
+  </div>
+  <div class="hero__figure" style="--i:3">
+    {{ partial "hero-schematic.html" . }}
+  </div>
 </section>
 
-<section class="index">
-  <h2 class="index__title">Writing</h2>
-  {{ $posts := where site.RegularPages "Section" "posts" }}
+<section class="strip" id="writing">
+  <header class="strip__head">
+    <h2 class="strip__title">Writing</h2>
+    <p class="strip__meta">
+      {{ with len $posts }}{{ . }} published{{ else }}in progress{{ end }}
+    </p>
+  </header>
+
   {{ if $posts }}
-  <ol class="postlist">
-    {{ range $posts }}
-    <li class="postlist__item">
-      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
-      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-      {{ with .Description }}<p class="postlist__blurb">{{ . }}</p>{{ end }}
+  <ol class="entries">
+    {{ range $i, $p := $posts.ByDate.Reverse }}
+    <li class="entry" data-reveal style="--i:{{ $i }}">
+      <a class="entry__hit" href="{{ $p.RelPermalink }}">
+        <span class="entry__num">{{ printf "%02d" (add $i 1) }}</span>
+        <span class="entry__main">
+          <span class="entry__title">{{ $p.Title }}</span>
+          {{ with $p.Description }}<span class="entry__blurb">{{ . }}</span>{{ end }}
+        </span>
+        <span class="entry__meta">
+          <time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "Jan 2006" }}</time>
+          {{ with $p.Params.jdk }}<span class="tagchip">JDK {{ . }}</span>{{ end }}
+        </span>
+      </a>
     </li>
     {{ end }}
   </ol>
   {{ else }}
-  <p class="empty">Nothing published yet.</p>
+  <div class="pending" data-reveal>
+    <p class="pending__lead">The first piece is being measured, not written.</p>
+    <p class="pending__body">
+      Nothing appears here until the numbers behind it hold up: flags confirmed against
+      the running VM, the harness run across every collector, hardware disclosed. When
+      that is done, it ships.
+    </p>
+  </div>
   {{ end }}
+</section>
+
+<section class="strip" id="work">
+  <header class="strip__head">
+    <h2 class="strip__title">Work</h2>
+    {{ with $work.focus }}<p class="strip__meta">{{ . }}</p>{{ end }}
+  </header>
+
+  <dl class="cv">
+    {{ range $i, $r := $work.roles }}
+    <div class="cv__row" data-reveal style="--i:{{ $i }}">
+      <dt class="cv__role">{{ $r.role }}</dt>
+      <dd class="cv__org">
+        <span class="cv__orgname">{{ $r.org }}</span>
+        {{ with $r.note }}<span class="cv__note">{{ . }}</span>{{ end }}
+      </dd>
+      <dd class="cv__period">{{ $r.period }}</dd>
+    </div>
+    {{ end }}
+    {{ range $i, $e := $work.education }}
+    <div class="cv__row cv__row--quiet" data-reveal style="--i:{{ add $i 1 }}">
+      <dt class="cv__role">{{ $e.role }}</dt>
+      <dd class="cv__org"><span class="cv__orgname">{{ $e.org }}</span></dd>
+      <dd class="cv__period">{{ with $e.period }}{{ . }}{{ end }}</dd>
+    </div>
+    {{ end }}
+  </dl>
+
+  <p class="cv__coda" data-reveal>
+    No stack list, and no certifications. Whatever ends up worth showing will be in
+    {{ with .Site.Params.repo }}<a href="{{ . }}">the source</a>{{ else }}the source{{ end }}.
+  </p>
 </section>
 {{ end }}

@@ -1,4 +1,28 @@
 <footer class="footer">
-  <p>Everything here is my own work and my own opinion. Code samples are compiled in CI; measurements are from my own machine, disclosed per article.</p>
+  <p>Everything here is my own work and my own opinion.</p>
   <p><a href="{{ "/index.xml" | relURL }}">rss</a> &middot; {{ now.Format "2006" }}</p>
 </footer>
+<script>
+(function () {
+  var root = document.documentElement;
+  if (root.dataset.motion !== '1') return;
+  if (!('IntersectionObserver' in window)) { delete root.dataset.motion; return; }
+
+  var reveal = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('is-in');
+      reveal.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('[data-reveal]').forEach(function (el) { reveal.observe(el); });
+
+  /* Stop the hero loop burning cycles once it has scrolled away. */
+  var sch = document.querySelector('[data-schematic]');
+  if (sch) {
+    new IntersectionObserver(function (entries) {
+      sch.classList.toggle('is-paused', !entries[0].isIntersecting);
+    }).observe(sch);
+  }
+})();
+</script>

@@ -1,0 +1,17 @@
+# Drives the work section on the home page. Deliberately no stack list and no
+# certifications: the evidence for what I can do is the writing, not a badge count.
+# Client systems are never named here, per the standards in content/about.md.
+focus: "Client systems are never named here."
+
+roles:
+  - role: "Systems engineer"
+    org: "Financial technology consultancy, London"
+    period: "Sep 2024 —"
+    note: "Low-latency, event-driven trading systems in Java. Aeron, Agrona, SBE, and the measurement discipline needed to know whether a change actually helped."
+
+education:
+  - role: "BSc Computer Science"
+    org: "King's College London"
+    # TODO: add the years. Left blank rather than guessed.
+    period: ""
+    note: ""

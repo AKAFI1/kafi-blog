@@ -1,0 +1,49 @@
+{{- /*
+  Hero schematic. Depicts a mechanism, not a measurement: three threads run until a
+  VM operation is requested, then each stops at its next poll point. The x axis is
+  time, so the shaded gap between the request and the last thread stopping is exactly
+  time to safepoint. No numbers appear, because no benchmark backs this drawing.
+  Animation is driven from assets/css/main.css and pauses when scrolled out of view.
+*/ -}}
+<figure class="sch" data-schematic>
+  <svg class="sch__svg" viewBox="0 0 440 200" role="img" aria-labelledby="sch-t sch-d">
+    <title id="sch-t">Threads stopping at their poll points for a safepoint</title>
+    <desc id="sch-d">Three threads run left to right along a time axis. A vertical mark
+    shows where a VM operation is requested. Each thread continues to its next poll point
+    and stops, at a different time. The shaded region between the request and the last
+    thread stopping is the time to safepoint.</desc>
+
+    <!-- the interval the whole site is about -->
+    <rect class="sch__band" x="140" y="24" width="142" height="146" rx="2"/>
+
+    <!-- request, and the moment the last thread finally parks -->
+    <line class="sch__mark sch__mark--req" x1="140" y1="18" x2="140" y2="176"/>
+    <line class="sch__mark sch__mark--last" x1="282" y1="18" x2="282" y2="176"/>
+
+    <!-- lanes, with a tick at each thread's origin -->
+    <g class="sch__lanes">
+      <line class="sch__lane" x1="24" y1="52" x2="416" y2="52"/>
+      <line class="sch__lane" x1="24" y1="100" x2="416" y2="100"/>
+      <line class="sch__lane" x1="24" y1="148" x2="416" y2="148"/>
+      <line class="sch__tick" x1="24" y1="45" x2="24" y2="59"/>
+      <line class="sch__tick" x1="24" y1="93" x2="24" y2="107"/>
+      <line class="sch__tick" x1="24" y1="141" x2="24" y2="155"/>
+    </g>
+
+    <!-- time axis -->
+    <line class="sch__axis" x1="24" y1="188" x2="410" y2="188"/>
+    <polyline class="sch__axis-head" points="404,184 410,188 404,192"/>
+
+    <!-- travellers. each stops at its own poll point, then resumes together -->
+    <g class="sch__dot sch__dot--1"><circle cx="24" cy="52" r="4.5"/></g>
+    <g class="sch__dot sch__dot--2"><circle cx="24" cy="100" r="4.5"/></g>
+    <g class="sch__dot sch__dot--3"><circle cx="24" cy="148" r="5"/></g>
+  </svg>
+  <figcaption class="sch__cap">
+    <span class="sch__legend">
+      <span class="sch__cap-key" aria-hidden="true"></span>time to safepoint
+    </span>
+    <span class="sch__axis-label">time &rarr;</span>
+    <span class="sch__note">The pause that is not in your GC log.</span>
+  </figcaption>
+</figure>
