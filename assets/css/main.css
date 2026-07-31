@@ -7,14 +7,23 @@
   --rule: #e2ddd1;
   --accent: #9e3618;
   --band: #f0d9c9;
+  color-scheme: light;
+
   --serif: "Newsreader", Georgia, serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
   --measure: 62ch;
   --gutter: 6.5rem;
 }
 
+/* The dark palette applies by two routes, and the two blocks below must stay in sync.
+   First route: the system preference, for anyone who has not picked a theme. The
+   :not() matters because a visitor on a dark system who explicitly chose light must
+   still get light. This route is also the only one that works with JS disabled.
+   Second route: an explicit choice, stored in localStorage and stamped onto <html>
+   as data-theme before first paint. An attribute selector outweighs the bare :root
+   in the media query, so an explicit choice always wins regardless of source order. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --paper: #14140f;
     --paper-sunk: #1d1d17;
     --ink: #ece7dc;
@@ -23,7 +32,19 @@
     --rule: #2e2e26;
     --accent: #e0794f;
     --band: #35251d;
+    color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+  --paper: #14140f;
+  --paper-sunk: #1d1d17;
+  --ink: #ece7dc;
+  --ink-soft: #cbc5b8;
+  --muted: #918b7e;
+  --rule: #2e2e26;
+  --accent: #e0794f;
+  --band: #35251d;
+  color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -40,6 +61,9 @@ body {
   line-height: 1.62;
   font-optical-sizing: auto;
   text-rendering: optimizeLegibility;
+  /* Safe because data-theme is stamped before first paint, so nothing changes on load
+     and there is no transition to flash through. Only a click animates. */
+  transition: background-color .28s ease, color .28s ease;
 }
 
 a { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
@@ -61,8 +85,7 @@ a:hover { border-bottom-color: var(--accent); }
   font-family: var(--mono);
   font-size: 0.8rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--ink);
   border: 0;
 }
@@ -75,6 +98,36 @@ a:hover { border-bottom-color: var(--accent); }
   border: 0;
 }
 .masthead__nav a:hover { color: var(--accent); }
+
+/* Hidden until the head script stamps data-theme, so a visitor with JS disabled is
+   never shown a control that cannot do anything. Their theme still follows the system. */
+.themetoggle { display: none; }
+:root[data-theme] .themetoggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0;
+  margin: -0.35rem 0;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color .18s ease, border-color .18s ease;
+}
+.themetoggle:hover { color: var(--accent); border-color: var(--rule); }
+.themetoggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* No display here: ".themetoggle svg" would outrank the single-class icon rules
+   below and force both icons visible. Sizing only. */
+.themetoggle svg { width: 15px; height: 15px; }
+
+/* Show the icon for the theme the button switches to, not the current one. */
+.themetoggle__moon { display: block; }
+.themetoggle__sun { display: none; }
+:root[data-theme="dark"] .themetoggle__moon { display: none; }
+:root[data-theme="dark"] .themetoggle__sun { display: block; }
 
 /* ---------- home ---------- */
 
@@ -701,6 +754,46 @@ html[data-motion] [data-reveal].is-in {
 /* font-size stays off the container: --measure is in ch, so shrinking type here
    would shrink the shell and knock the footer out of line with every other section. */
 .footer p { margin: 0 0 0.5rem; max-width: 68ch; font-size: 0.7rem; }
+
+.footer__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.4rem 2rem;
+}
+.footer__text { min-width: 0; }
+.footer__text p:last-child { margin-bottom: 0; }
+
+.footer__links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+}
+/* Hairline circles rather than a filled bar, so the controls read as part of the
+   paper rather than a panel dropped on top of it. */
+.iconlink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  color: var(--muted);
+  transition: color .18s ease, border-color .18s ease, background-color .18s ease;
+}
+.iconlink:hover {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: var(--paper-sunk);
+}
+.iconlink:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.iconlink svg { display: block; width: 15px; height: 15px; }
+.iconlink--at { font-family: var(--mono); font-size: 0.95rem; line-height: 1; }
 .footer a { color: var(--muted); border-bottom-color: var(--rule); }
 .footer a:hover { color: var(--accent); }
 

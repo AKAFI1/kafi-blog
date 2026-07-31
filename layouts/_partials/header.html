@@ -1,9 +1,22 @@
 <header class="masthead">
-  <a class="masthead__name" href="{{ "/" | relURL }}">{{ .Site.Title }}</a>
+  {{- /* The wordmark is the domain; .Site.Title stays the person's name, which the
+         page <title>, the RSS feed and the home page h1 all still use. */}}
+  <a class="masthead__name" href="{{ "/" | relURL }}">kafi.dev</a>
   <nav class="masthead__nav">
     <a href="{{ "/posts/" | relURL }}">writing</a>
     <a href="{{ "/about/" | relURL }}">about</a>
-    <a href="{{ .Site.Params.github }}">github</a>
-    <a href="{{ .Site.Params.linkedin }}">linkedin</a>
+    {{- /* github and linkedin live in the footer, so they persist on every page
+           without crowding the nav. Accessible label synced by footer.html. */}}
+    <button class="themetoggle" type="button" data-theme-toggle aria-label="Switch theme">
+      <svg class="themetoggle__moon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+      </svg>
+      <svg class="themetoggle__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2"/>
+        <path d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/>
+      </svg>
+    </button>
   </nav>
 </header>
